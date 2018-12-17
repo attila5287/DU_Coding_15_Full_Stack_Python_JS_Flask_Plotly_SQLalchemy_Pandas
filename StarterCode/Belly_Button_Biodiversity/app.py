@@ -1,40 +1,51 @@
 import os
-
 import pandas as pd
 import numpy as np
-
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
-
 from flask import Flask, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
-
+# -----------------------------------
+# Flask mode: ON for all web framework
 app = Flask(__name__)
 
-
-#################################################
-# Database Setup
-#################################################
-
+# SQL database setup to pull stored data----------
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/bellybutton.sqlite"
 db = SQLAlchemy(app)
-
-# reflect an existing database into a new model
 Base = automap_base()
-# reflect the tables
 Base.prepare(db.engine, reflect=True)
-
-# Save references to each table
+# ------------------------------------
+# Assign python variables for key db objects
 Samples_Metadata = Base.classes.sample_metadata
 Samples = Base.classes.samples
+
+# Welcome page------------------------
 
 
 @app.route("/")
 def index():
     """Return the homepage."""
     return render_template("index.html")
+# here is Mozilla Firefox connection info
+#   Response Headers-----------
+    # Content-Length	1040
+    # Content-Type	application/json
+    # Date	Mon, 17 Dec 2018 07: 14: 26 GMT
+    # Server	Werkzeug/0.14.1 Python/3.6.5
+# ----------------------------
+# Accept /html, application/xhtml+xml, application/xml
+# q = 0.9, */*
+# q = 0.8
+# Accept-Encoding	gzip, deflate
+# Accept-Language	en-US, en
+# q = 0.5
+# Connection	keep-alive
+# Host	127.0.0.1: 5000
+# Upgrade-Insecure-Requests	1
+# User-Agent	Mozilla/5.0 (Windows NT 10.0 Win64 x64 rv: 64.0)
+# Gecko/20100101 Firefox/64.0
 
 
 @app.route("/names")
@@ -62,7 +73,8 @@ def sample_metadata(sample):
         Samples_Metadata.WFREQ,
     ]
 
-    results = db.session.query(*sel).filter(Samples_Metadata.sample == sample).all()
+    results = db.session.query(
+        *sel).filter(Samples_Metadata.sample == sample).all()
 
     # Create a dictionary entry for each row of metadata information
     sample_metadata = {}
