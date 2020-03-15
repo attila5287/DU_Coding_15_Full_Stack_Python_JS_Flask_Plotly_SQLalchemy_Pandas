@@ -12,6 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # SQL database setup to pull stored data----------
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db/bellybutton.sqlite"
 db = SQLAlchemy(app)
 Base = automap_base()
